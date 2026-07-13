@@ -1,0 +1,9 @@
+# Normalize line endings to LF in the repo (checked-in), so the code builds
+# identically on Linux/macOS/Windows and inside the Docker image.
+* text=auto eol=lf
+
+# Binary / generated assets that must not be line-ending normalized.
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary

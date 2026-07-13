@@ -1,0 +1,10 @@
+[project]
+name = "relocation-assistant-rag"
+version = "0.1.0"
+description = "RAG assistant with source citations and an evaluation harness."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+addopts = "-q"

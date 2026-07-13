@@ -1,0 +1,13 @@
+{"question": "How do I get a PESEL number in Poland?", "expected_document": "pesel.md"}
+{"question": "What documents do I need to apply for a PESEL?", "expected_document": "pesel.md"}
+{"question": "Which office handles residence registration for an address?", "expected_document": "residence_registration.md"}
+{"question": "Where do EU citizens register a stay longer than three months in the Gdansk region?", "expected_document": "residence_registration.md"}
+{"question": "How does public health insurance work if I am employed in Poland?", "expected_document": "health_insurance.md"}
+{"question": "What covers my medical care before my Polish insurance is active?", "expected_document": "health_insurance.md"}
+{"question": "Do I need a NIP tax number if I am just an employee in Poland?", "expected_document": "nip_tax_number.md"}
+{"question": "How is income tax PIT withheld from my salary in Poland?", "expected_document": "nip_tax_number.md"}
+{"question": "Who registers me with ZUS for social security when I start a job?", "expected_document": "zus_social_security.md"}
+{"question": "What ZUS relief options exist for a newly self-employed person?", "expected_document": "zus_social_security.md"}
+{"question": "What do I need to open a bank account in Poland?", "expected_document": "bank_account.md"}
+{"question": "Can I drive in Poland on my existing EU driving licence?", "expected_document": "driving_licence.md"}
+{"question": "What should a tenancy agreement in Poland include, and what is kaucja?", "expected_document": "renting_apartment.md"}

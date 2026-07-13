@@ -1,0 +1,23 @@
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./data:/app/data
+      - ./.chroma:/app/.chroma
+    # If you run Ollama on the host, the API reaches it via host.docker.internal.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  ui:
+    build: .
+    command: streamlit run frontend/streamlit_app.py --server.address 0.0.0.0 --server.port 8501
+    ports:
+      - "8501:8501"
+    environment:
+      - API_URL=http://api:8000
+    depends_on:
+      - api
