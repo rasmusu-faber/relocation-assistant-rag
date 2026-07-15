@@ -7,7 +7,7 @@ passages** behind every answer.
 
 > The domain is swappable — point `data/` at any document corpus and re-ingest.
 
-> 🔗 **Live demo:** _coming soon_ — deployed as a free Hugging Face Space. See [DEPLOY.md](DEPLOY.md).
+> 🔗 **Live demo:** _coming soon_ — deployed free on Streamlit Community Cloud. See [DEPLOY.md](DEPLOY.md).
 
 What makes this more than a "chat with your PDF" demo: it ships with a small
 **evaluation harness** that measures retrieval quality and answer faithfulness,
@@ -77,10 +77,11 @@ docker compose up --build
 
 ## Deployment
 
-The public demo runs as a single Docker container on a free **Hugging Face
-Space** (Streamlit + in-process pipeline on port 7860, Groq as the LLM provider
-via a Space secret; the vector store is rebuilt on each cold start). Step-by-step
-instructions: [DEPLOY.md](DEPLOY.md).
+The public demo runs free on **Streamlit Community Cloud**, deployed straight from
+this GitHub repo: the Streamlit UI calls the RAG pipeline in-process (Groq as the
+LLM provider via a stored secret; vector store rebuilt on each cold start). The
+repo's `Dockerfile`/`docker-compose.yml` remain for local container use.
+Step-by-step instructions: [DEPLOY.md](DEPLOY.md).
 
 ## Evaluation
 
@@ -117,8 +118,7 @@ relocation-assistant-rag/
 ├── tests/                 # pytest
 ├── .github/workflows/ci.yml   # tests + retrieval eval gate
 ├── Dockerfile, docker-compose.yml
-├── deploy/hf_space_README.md  # README (with HF config) for the Space
-├── DEPLOY.md                  # how to deploy the live Hugging Face Space
+├── DEPLOY.md                  # how to deploy the live demo (Streamlit Cloud)
 ├── requirements.txt, .env.example, .gitignore
 ```
 

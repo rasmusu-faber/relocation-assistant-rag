@@ -11,11 +11,34 @@ Runs in two modes:
 from __future__ import annotations
 
 import os
+import sys
+
+# Make the repo root importable so `import app.…` works regardless of how the app
+# is launched (e.g. `streamlit run frontend/streamlit_app.py` on Streamlit
+# Community Cloud, which otherwise only puts frontend/ on the path).
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import streamlit as st
 
-API_URL = os.getenv("API_URL", "http://localhost:8000")
-IN_PROCESS = os.getenv("RAG_IN_PROCESS", "").lower() in {"1", "true", "yes"}
+# On Streamlit Community Cloud, config is provided via st.secrets. Mirror those
+# into the environment so the pydantic-settings config (which reads env vars)
+# picks them up. Real env vars (local/.env) take precedence.
+try:
+    for _k, _v in st.secrets.items():
+        os.environ.setdefault(_k, str(_v))
+except Exception:  # noqa: BLE001 - no secrets configured (e.g. local dev)
+    pass
+
+# Mode selection:
+# - If RAG_IN_PROCESS is set explicitly, honour it.
+# - Otherwise default to in-process, unless an API_URL is provided (then use HTTP).
+API_URL = os.getenv("API_URL")
+_force = os.getenv("RAG_IN_PROCESS")
+if _force is not None:
+    IN_PROCESS = _force.lower() in {"1", "true", "yes"}
+else:
+    IN_PROCESS = API_URL is None
+API_URL = API_URL or "http://localhost:8000"
 
 st.set_page_config(page_title="Relocation Assistant", page_icon="🧭")
 st.title("🧭 Relocation Assistant")
