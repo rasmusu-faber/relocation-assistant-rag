@@ -7,6 +7,8 @@ passages** behind every answer.
 
 > The domain is swappable — point `data/` at any document corpus and re-ingest.
 
+> 🔗 **Live demo:** _coming soon_ — deployed as a free Hugging Face Space. See [DEPLOY.md](DEPLOY.md).
+
 What makes this more than a "chat with your PDF" demo: it ships with a small
 **evaluation harness** that measures retrieval quality and answer faithfulness,
 runnable locally and in CI. (Built by someone whose M.Sc. thesis was LLM
@@ -58,19 +60,43 @@ streamlit run frontend/streamlit_app.py # http://localhost:8501
 
 ## Run with Docker
 
+The image's default command is the **single-process demo** — Streamlit calling
+the RAG pipeline in-process on port **7860**, the exact setup the live Space runs:
+
+```bash
+docker build -t relocation-rag .
+docker run -p 7860:7860 --env-file .env relocation-rag   # http://localhost:7860
+```
+
+For the full **two-service** setup (FastAPI API + Streamlit UI over HTTP):
+
 ```bash
 docker compose up --build
 # API → http://localhost:8000 , UI → http://localhost:8501
 ```
 
+## Deployment
+
+The public demo runs as a single Docker container on a free **Hugging Face
+Space** (Streamlit + in-process pipeline on port 7860, Groq as the LLM provider
+via a Space secret; the vector store is rebuilt on each cold start). Step-by-step
+instructions: [DEPLOY.md](DEPLOY.md).
+
 ## Evaluation
 
 ```bash
-python -m eval.run_eval      # prints retrieval hit-rate and (optional) faithfulness
+python -m app.rag.ingest     # build the vector store first
+python -m eval.run_eval      # prints retrieval hit-rate@k and enforces the gate
 ```
 
-The evaluation set lives in `eval/eval_set.jsonl` (question / expected-source pairs).
-Extend it as you add documents.
+The harness computes **retrieval hit-rate@k**: the fraction of eval questions
+whose expected source document appears among the top-k retrieved passages. It is
+wired into CI as a **quality gate** (fails the build below **0.8**), using local
+embeddings only — no LLM/API key required. Current corpus (8 docs, 13 questions):
+**hit-rate 100%**.
+
+The evaluation set lives in `eval/eval_set.jsonl` (question / expected-source
+pairs). Extend it as you add documents.
 
 ## Project structure
 
@@ -89,15 +115,19 @@ relocation-assistant-rag/
 ├── eval/{run_eval.py, eval_set.jsonl}
 ├── data/                  # sample source documents (.md/.txt)
 ├── tests/                 # pytest
-├── .github/workflows/ci.yml
+├── .github/workflows/ci.yml   # tests + retrieval eval gate
 ├── Dockerfile, docker-compose.yml
+├── deploy/hf_space_README.md  # README (with HF config) for the Space
+├── DEPLOY.md                  # how to deploy the live Hugging Face Space
 ├── requirements.txt, .env.example, .gitignore
 ```
 
 ## Roadmap
 
-- [ ] Weekend 1 (MVP): ingest, cited answers, FastAPI + Streamlit in Docker
-- [ ] Weekend 2: eval harness in CI, public deployment (HF Spaces / Render), agentic clarify-question step
+- [x] MVP: ingest, cited answers, FastAPI + Streamlit, Docker
+- [x] Eval harness wired into CI (retrieval hit-rate gate ≥ 0.8)
+- [ ] Public deployment (Hugging Face Space) + README screenshots & live link
+- [ ] Stretch: agentic clarify-question step, reranking, answer-faithfulness scoring
 
 ## Disclaimer
 

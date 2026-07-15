@@ -11,7 +11,22 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-EXPOSE 8000
+# Writable caches for the embedding-model download and the vector store.
+# (Hugging Face Space filesystems are ephemeral and can be restrictive.)
+ENV HF_HOME=/app/.cache/huggingface \
+    SENTENCE_TRANSFORMERS_HOME=/app/.cache/huggingface \
+    XDG_CACHE_HOME=/app/.cache \
+    CHROMA_DIR=/app/.chroma
+RUN mkdir -p /app/.cache /app/.chroma && chmod -R 777 /app/.cache /app/.chroma
 
-# Default: run the API. The UI service overrides this in docker-compose.
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Hugging Face Spaces serve on port 7860.
+EXPOSE 7860
+
+# Default: the public demo — a single Streamlit process that calls the RAG
+# pipeline in-process (no separate API server). Ingest first because the Space
+# filesystem is rebuilt on each cold start, then serve on 7860.
+#
+# The FastAPI "production API" is still available:
+#   docker run ... uvicorn app.main:app --host 0.0.0.0 --port 8000
+# and docker-compose runs the API + UI as two services (see docker-compose.yml).
+CMD ["sh", "-c", "python -m app.rag.ingest && RAG_IN_PROCESS=1 streamlit run frontend/streamlit_app.py --server.address 0.0.0.0 --server.port 7860"]
