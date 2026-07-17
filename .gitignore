@@ -19,5 +19,6 @@ storage/
 # Jupyter
 .ipynb_checkpoints/
 
-# Internal planning doc — kept locally, not published
+# Internal planning docs — kept locally, not published
 BUILD_PLAN.md
+DEPLOY.md
