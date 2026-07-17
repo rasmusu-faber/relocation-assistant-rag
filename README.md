@@ -8,7 +8,7 @@ behind every answer.
 
 > The domain is swappable — point `data/` at any document corpus and re-ingest.
 
-> 🔗 **Live demo:** _coming soon_ — deployed free on Streamlit Community Cloud. See [DEPLOY.md](DEPLOY.md).
+> 🔗 **Live demo:** _coming soon_ — deployed free on Streamlit Community Cloud.
 
 What makes this more than a "chat with your PDF" demo: it ships with a small
 **evaluation harness** that measures retrieval quality and answer faithfulness,
@@ -82,7 +82,11 @@ The public demo runs free on **Streamlit Community Cloud**, deployed straight fr
 this GitHub repo: the Streamlit UI calls the RAG pipeline in-process (Groq as the
 LLM provider via a stored secret; vector store rebuilt on each cold start). The
 repo's `Dockerfile`/`docker-compose.yml` remain for local container use.
-Step-by-step instructions: [DEPLOY.md](DEPLOY.md).
+
+To deploy: on [share.streamlit.io](https://share.streamlit.io), create an app from
+this repo pointing at `frontend/streamlit_app.py`, and add your LLM-provider
+credentials (`OPENAI_API_KEY`, `OPENAI_BASE_URL`, `OPENAI_MODEL`) as app secrets.
+The UI auto-selects in-process mode when no `API_URL` is set.
 
 ## Evaluation
 
@@ -134,7 +138,6 @@ relocation-assistant-rag/
 ├── tests/                 # pytest
 ├── .github/workflows/ci.yml   # tests + retrieval eval gate
 ├── Dockerfile, docker-compose.yml
-├── DEPLOY.md                  # how to deploy the live demo (Streamlit Cloud)
 ├── requirements.txt, .env.example, .gitignore
 ```
 
