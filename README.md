@@ -2,8 +2,9 @@
 
 A retrieval-augmented generation (RAG) assistant that answers questions about
 relocating to Poland as an EU citizen (PESEL, residence registration, health
-insurance, …) **grounded in official documents** and returns the **source
-passages** behind every answer.
+insurance, …), grounded in a small **curated knowledge base compiled from
+official sources** (gov.pl, ZUS, NFZ, …), and returns the **source passages**
+behind every answer.
 
 > The domain is swappable — point `data/` at any document corpus and re-ingest.
 
@@ -99,6 +100,21 @@ embeddings only — no LLM/API key required. Current corpus (8 docs, 13 question
 The evaluation set lives in `eval/eval_set.jsonl` (question / expected-source
 pairs). Extend it as you add documents.
 
+## Knowledge base & data provenance
+
+The corpus in `data/` is a small set of plain-language summaries written for this
+demo, each **compiled from and attributed to official Polish/EU sources**
+(gov.pl, obywatel.gov.pl, ZUS, NFZ, …) — see the `Source:` note at the bottom of
+every file. It is intentionally small and curated: the focus of the project is
+the **RAG + evaluation engineering**, not a complete legal reference. Answers are
+model-generated and **not** legal advice; always verify with the source cited in
+each document.
+
+> **Planned v2:** swap these summaries for a snapshot of real, reusably-licensed
+> official pages (e.g. the EU *Your Europe* portal) and surface the actual source
+> **URL** in each citation — turning provenance from a filename into a clickable
+> official link.
+
 ## Project structure
 
 ```
@@ -114,7 +130,7 @@ relocation-assistant-rag/
 │       └── pipeline.py    # retrieve + generate → answer with sources
 ├── frontend/streamlit_app.py
 ├── eval/{run_eval.py, eval_set.jsonl}
-├── data/                  # sample source documents (.md/.txt)
+├── data/                  # curated summaries compiled from official sources (.md/.txt)
 ├── tests/                 # pytest
 ├── .github/workflows/ci.yml   # tests + retrieval eval gate
 ├── Dockerfile, docker-compose.yml
@@ -126,13 +142,16 @@ relocation-assistant-rag/
 
 - [x] MVP: ingest, cited answers, FastAPI + Streamlit, Docker
 - [x] Eval harness wired into CI (retrieval hit-rate gate ≥ 0.8)
-- [ ] Public deployment (Hugging Face Space) + README screenshots & live link
+- [ ] Public deployment (Streamlit Community Cloud) + README screenshots & live link
+- [ ] v2 corpus: snapshot of real, reusably-licensed official pages with clickable source-URL citations
 - [ ] Stretch: agentic clarify-question step, reranking, answer-faithfulness scoring
 
 ## Disclaimer
 
-Educational portfolio project. Answers are model-generated and **not** legal
-advice; always verify with the official source linked in each answer.
+Educational portfolio project. The knowledge base is a small set of curated
+summaries compiled from official sources, not the official documents themselves.
+Answers are model-generated and **not** legal advice; always verify with the
+official source cited in each document.
 
 ## License
 

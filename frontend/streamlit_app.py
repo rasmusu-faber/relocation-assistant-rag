@@ -42,7 +42,7 @@ API_URL = API_URL or "http://localhost:8000"
 
 st.set_page_config(page_title="Relocation Assistant", page_icon="🧭")
 st.title("🧭 Relocation Assistant")
-st.caption("RAG over official documents · every answer shows its sources.")
+st.caption("RAG over a curated knowledge base · every answer shows its sources.")
 
 
 @st.cache_resource(show_spinner="Building the knowledge base…")
