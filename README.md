@@ -8,7 +8,11 @@ behind every answer.
 
 > The domain is swappable — point `data/` at any document corpus and re-ingest.
 
-> 🔗 **Live demo:** _coming soon_ — deployed free on Streamlit Community Cloud.
+> 🔗 **[Live demo »](https://relocation-assistant-rag.streamlit.app/)** — hosted free on
+> Streamlit Community Cloud. (Free tier sleeps when idle; the first visit takes a
+> few seconds to wake.)
+
+![Relocation Assistant — asking a question and getting a grounded answer with sources](docs/screenshot.png)
 
 What makes this more than a "chat with your PDF" demo: it ships with a small
 **evaluation harness** that measures retrieval quality and answer faithfulness,
