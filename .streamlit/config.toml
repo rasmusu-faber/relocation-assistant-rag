@@ -1,0 +1,24 @@
+# Streamlit theme — a restrained, professional look for the public demo.
+# Picked up automatically by `streamlit run` and by Streamlit Community Cloud.
+
+[theme]
+primaryColor = "#2563eb"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f4f6fa"
+textColor = "#0f172a"
+font = "sans serif"
+
+[server]
+# Streamlit's module watcher walks every imported package. With transformers/torch
+# that eagerly pulls optional submodules (e.g. vision models that require
+# torchvision) and crashes the app on startup. The deployed app doesn't need
+# hot-reload, so the watcher is off.
+fileWatcherType = "none"
+
+[client]
+# Hide the "Made with Streamlit" / error details chrome from end users.
+toolbarMode = "minimal"
+showErrorDetails = false
+
+[browser]
+gatherUsageStats = false

@@ -2,11 +2,11 @@
 
 Runs in two modes:
 
-- **HTTP mode** (default): calls the FastAPI backend over HTTP. Used by
-  ``docker compose`` and for local two-service development.
-- **In-process mode** (``RAG_IN_PROCESS=1``): imports the RAG pipeline directly,
-  so a single process serves the whole demo — no separate API server needed.
-  This is what the Hugging Face Space uses (one container, port 7860).
+- **In-process mode** (default when no ``API_URL`` is set): imports the RAG
+  pipeline directly, so a single process serves the whole demo — no separate API
+  server needed. This is what the public Streamlit Community Cloud demo uses.
+- **HTTP mode** (when ``API_URL`` is set): calls the FastAPI backend over HTTP.
+  Used by ``docker compose`` and for local two-service development.
 """
 from __future__ import annotations
 
@@ -40,18 +40,80 @@ else:
     IN_PROCESS = API_URL is None
 API_URL = API_URL or "http://localhost:8000"
 
-st.set_page_config(page_title="Relocation Assistant", page_icon="🧭")
-st.title("🧭 Relocation Assistant")
-st.caption("RAG over a curated knowledge base · every answer shows its sources.")
+REPO_URL = "https://github.com/rasmusfaber-ai/relocation-assistant-rag"
+
+EXAMPLE_QUESTIONS = [
+    "How do I get a PESEL number?",
+    "Who registers me with ZUS when I start a job?",
+    "What do I need to open a bank account?",
+]
+
+st.set_page_config(
+    page_title="Relocation Assistant",
+    page_icon="🧭",
+    layout="centered",
+    initial_sidebar_state="collapsed",
+    menu_items={"About": f"RAG assistant with source citations. Code: {REPO_URL}"},
+)
+
+# --- Presentation -----------------------------------------------------------
+# Hide the default Streamlit chrome (top gradient bar, toolbar, hamburger menu,
+# footer) so the demo reads as a product rather than a framework template. The
+# header element itself is kept (transparent) so the sidebar toggle still works.
+st.markdown(
+    """
+    <style>
+      [data-testid="stDecoration"], [data-testid="stToolbar"] { display: none; }
+      #MainMenu, footer { visibility: hidden; }
+      [data-testid="stHeader"] { background: transparent; }
+
+      .block-container { padding-top: 2.5rem; max-width: 46rem; }
+
+      .ra-title {
+        font-size: 2rem; font-weight: 700; letter-spacing: -0.02em;
+        margin: 0 0 0.25rem 0;
+      }
+      .ra-subtitle {
+        color: #64748b; font-size: 0.98rem; margin: 0 0 0.25rem 0;
+      }
+      .ra-rule {
+        border: none; border-top: 1px solid #e2e8f0; margin: 1.25rem 0 1.5rem 0;
+      }
+      .ra-footer {
+        color: #94a3b8; font-size: 0.82rem; line-height: 1.5;
+        border-top: 1px solid #e2e8f0; margin-top: 2.5rem; padding-top: 1rem;
+      }
+      .ra-footer a { color: #64748b; }
+      /* Example-question buttons: quiet, pill-like. */
+      div[data-testid="column"] .stButton > button {
+        border-radius: 999px; border: 1px solid #e2e8f0; background: #f8fafc;
+        color: #475569; font-size: 0.82rem; font-weight: 500; padding: 0.3rem 0.8rem;
+      }
+      div[data-testid="column"] .stButton > button:hover {
+        border-color: #2563eb; color: #2563eb; background: #ffffff;
+      }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
+
+st.markdown('<p class="ra-title">🧭 Relocation Assistant</p>', unsafe_allow_html=True)
+st.markdown(
+    '<p class="ra-subtitle">Answers about relocating to Poland — grounded in a '
+    "curated knowledge base, with the source passages behind every answer.</p>",
+    unsafe_allow_html=True,
+)
+st.markdown('<hr class="ra-rule">', unsafe_allow_html=True)
 
 
+# --- Backend ----------------------------------------------------------------
 @st.cache_resource(show_spinner="Building the knowledge base…")
 def _ensure_ingested() -> dict:
-    """Ingest the documents once per container start (in-process mode).
+    """Ingest the documents once per process start (in-process mode).
 
-    The Hugging Face Space filesystem is ephemeral, so the vector store is
-    rebuilt on each cold start. ``st.cache_resource`` guarantees this runs only
-    once per process, not on every interaction.
+    The hosted filesystem is ephemeral, so the vector store is rebuilt on each
+    cold start. ``st.cache_resource`` guarantees this runs only once per process,
+    not on every interaction.
     """
     from app.rag.ingest import ingest
 
@@ -80,15 +142,16 @@ if IN_PROCESS:
     _ensure_ingested()
 
 with st.sidebar:
-    st.header("About")
+    st.subheader("About")
     st.write(
-        "Ask about relocating to Poland (PESEL, residence registration, "
-        "health insurance, taxes, ZUS, …). Answers are grounded in the ingested "
-        "documents and every answer shows its sources."
+        "Ask about relocating to Poland (PESEL, residence registration, health "
+        "insurance, taxes, ZUS, …). Every answer is grounded in the ingested "
+        "documents and shows the passages it used."
     )
     st.caption(f"Mode: {'in-process' if IN_PROCESS else 'HTTP API'}")
+    st.link_button("View source on GitHub", REPO_URL, use_container_width=True)
     # Re-ingest is only meaningful in HTTP mode; in-process ingests on startup.
-    if not IN_PROCESS and st.button("Re-ingest documents"):
+    if not IN_PROCESS and st.button("Re-ingest documents", use_container_width=True):
         import httpx
 
         try:
@@ -98,18 +161,54 @@ with st.sidebar:
         except Exception as exc:  # noqa: BLE001
             st.error(f"Ingest failed: {exc}")
 
-question = st.text_input("Your question", placeholder="How do I get a PESEL number?")
 
-if st.button("Ask") and question:
-    with st.spinner("Thinking…"):
+# --- Input ------------------------------------------------------------------
+st.session_state.setdefault("question", "")
+
+st.caption("Try one of these:")
+for col, example in zip(st.columns(len(EXAMPLE_QUESTIONS)), EXAMPLE_QUESTIONS):
+    # Clicking a chip fills the input; the rerun applies it before the widget
+    # below is instantiated, which is why we set state and rerun here.
+    if col.button(example, use_container_width=True):
+        st.session_state.question = example
+        st.rerun()
+
+with st.form("ask", border=False):
+    st.text_input(
+        "Your question",
+        key="question",
+        placeholder="e.g. How do I get a PESEL number and what documents do I need?",
+    )
+    submitted = st.form_submit_button("Ask", type="primary")
+
+# --- Answer -----------------------------------------------------------------
+question = st.session_state.question
+
+if submitted and question.strip():
+    with st.spinner("Retrieving sources and composing an answer…"):
         try:
             data = _ask_in_process(question) if IN_PROCESS else _ask_http(question)
         except Exception as exc:  # noqa: BLE001
             st.error(f"Request failed: {exc}")
         else:
-            st.markdown("### Answer")
-            st.write(data["answer"])
-            st.markdown("### Sources")
-            for s in data["sources"]:
-                with st.expander(f"{s['document']}  ·  score {s['score']}"):
-                    st.write(s["snippet"])
+            with st.container(border=True):
+                st.markdown("**Answer**")
+                st.write(data["answer"])
+
+            sources = data["sources"]
+            if sources:
+                st.markdown(f"**Sources** · {len(sources)} passages")
+                for s in sources:
+                    label = f"{s['document']}  —  relevance {s['score']:.2f}"
+                    with st.expander(label):
+                        st.write(s["snippet"])
+elif submitted:
+    st.warning("Please enter a question first.")
+
+st.markdown(
+    '<div class="ra-footer">Answers are model-generated from a small curated '
+    "knowledge base of summaries compiled from official sources — <strong>not legal "
+    'advice</strong>. Always verify with the official source. '
+    f'<a href="{REPO_URL}">Source code</a></div>',
+    unsafe_allow_html=True,
+)

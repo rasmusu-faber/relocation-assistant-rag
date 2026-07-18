@@ -15,10 +15,11 @@ behind every answer.
 ![Relocation Assistant — asking a question and getting a grounded answer with sources](docs/screenshot.png)
 
 What makes this more than a "chat with your PDF" demo: it ships with a small
-**evaluation harness** that measures retrieval quality and answer faithfulness,
-runnable locally and in CI. (Built by someone whose M.Sc. thesis was LLM
-evaluation — so evaluation is treated as a first-class concern, not an
-afterthought.)
+**evaluation harness** that measures retrieval quality (hit-rate@k) and enforces
+it as a **CI quality gate**, runnable locally and in CI without an API key.
+(Built by someone whose M.Sc. thesis was LLM evaluation — so evaluation is
+treated as a first-class concern, not an afterthought.) Answer-faithfulness
+scoring is on the roadmap, not yet implemented.
 
 ## Architecture
 

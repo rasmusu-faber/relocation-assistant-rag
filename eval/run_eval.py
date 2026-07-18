@@ -1,8 +1,9 @@
 """Lightweight evaluation harness for the RAG retriever.
 
 Computes retrieval hit-rate@k: the fraction of questions whose expected source
-document appears among the top-k retrieved passages. Optionally checks answer
-faithfulness if the LLM provider is reachable.
+document appears among the top-k retrieved passages. Retrieval-only, so it runs
+deterministically in CI without an LLM or API key. (Answer-faithfulness scoring
+is planned but not implemented yet.)
 
 Run:  python -m eval.run_eval
 """
