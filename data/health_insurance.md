@@ -1,3 +1,8 @@
+---
+source_name: Your Europe — Your health insurance cover when living abroad
+source_url: https://europa.eu/youreurope/citizens/health/when-living-abroad/health-insurance-cover/index_en.htm
+---
+
 # Health insurance (NFZ) in Poland
 
 Public healthcare in Poland is run by the National Health Fund (Narodowy Fundusz

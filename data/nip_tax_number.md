@@ -1,3 +1,8 @@
+---
+source_name: biznes.gov.pl — What is a NIP
+source_url: https://www.biznes.gov.pl/en/portal/004124
+---
+
 # Tax number (NIP) and income tax (PIT) in Poland
 
 Poland has two tax-relevant identifiers for individuals: the PESEL (used for most

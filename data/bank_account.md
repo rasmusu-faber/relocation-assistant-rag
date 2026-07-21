@@ -1,3 +1,8 @@
+---
+source_name: Your Europe — Bank accounts in the EU
+source_url: https://europa.eu/youreurope/citizens/consumers/financial-products-and-services/bank-accounts-eu/index_en.htm
+---
+
 # Opening a bank account in Poland
 
 A Polish bank account (konto osobiste) makes salary payments, rent and bills much

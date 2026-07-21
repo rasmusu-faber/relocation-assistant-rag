@@ -15,6 +15,12 @@ class Source(BaseModel):
     document: str = Field(..., description="Source document name.")
     snippet: str = Field(..., description="The retrieved text chunk.")
     score: float = Field(..., description="Similarity score (higher = more relevant).")
+    source_name: str | None = Field(
+        None, description="Human-readable name of the original source, if known."
+    )
+    source_url: str | None = Field(
+        None, description="URL of the original official source, if known."
+    )
 
 
 class ChatResponse(BaseModel):

@@ -11,3 +11,6 @@
 {"question": "What do I need to open a bank account in Poland?", "expected_document": "bank_account.md"}
 {"question": "Can I drive in Poland on my existing EU driving licence?", "expected_document": "driving_licence.md"}
 {"question": "What should a tenancy agreement in Poland include, and what is kaucja?", "expected_document": "renting_apartment.md"}
+{"question": "How do I find a job in Poland as an EU citizen?", "expected_document": "job_search.md"}
+{"question": "Do I need a work permit to work in Poland as an EU national?", "expected_document": "job_search.md"}
+{"question": "Can I keep my unemployment benefit while job-hunting in Poland?", "expected_document": "job_search.md"}

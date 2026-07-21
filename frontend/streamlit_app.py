@@ -84,6 +84,12 @@ st.markdown(
         border-top: 1px solid #e2e8f0; margin-top: 2.5rem; padding-top: 1rem;
       }
       .ra-footer a { color: #64748b; }
+      /* Retrieved passages (st.text): verbatim, wrapped, keep line structure. */
+      [data-testid="stExpander"] [data-testid="stText"] {
+        white-space: pre-wrap; word-break: break-word;
+        font-family: inherit; font-size: 0.9rem; color: #334155; line-height: 1.6;
+        background: transparent; border: none; padding: 0; margin: 0;
+      }
       /* Example-question buttons: quiet, pill-like. */
       div[data-testid="column"] .stButton > button {
         border-radius: 999px; border: 1px solid #e2e8f0; background: #f8fafc;
@@ -199,9 +205,15 @@ if submitted and question.strip():
             if sources:
                 st.markdown(f"**Sources** · {len(sources)} passages")
                 for s in sources:
-                    label = f"{s['document']}  —  relevance {s['score']:.2f}"
-                    with st.expander(label):
-                        st.write(s["snippet"])
+                    title = s.get("source_name") or s["document"]
+                    with st.expander(f"{title}  —  relevance {s['score']:.2f}"):
+                        # st.text (not st.write/markdown) renders the passage
+                        # verbatim. It is the raw text the model saw, so a chunk
+                        # starting with "# Heading" must not become a huge title.
+                        st.text(s["snippet"])
+                        if s.get("source_url"):
+                            st.markdown(f"[Open the official source ↗]({s['source_url']})")
+                        st.caption(f"Knowledge-base file: `{s['document']}`")
 elif submitted:
     st.warning("Please enter a question first.")
 

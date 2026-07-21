@@ -1,3 +1,8 @@
+---
+source_name: Your Europe — Registering presence after the first 3 months
+source_url: https://europa.eu/youreurope/citizens/residence/documents-formalities/registering-residence/index_en.htm
+---
+
 # Residence registration (zameldowanie) in Poland
 
 Zameldowanie is the registration of your place of residence with the local

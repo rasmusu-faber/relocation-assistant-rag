@@ -1,3 +1,8 @@
+---
+source_name: Your Europe — Driving licence exchange and recognition in the EU
+source_url: https://europa.eu/youreurope/citizens/vehicles/driving-licence/driving-licence-exchange-recognition/index_en.htm
+---
+
 # Driving licence for EU citizens in Poland
 
 Driving licences issued by EU/EEA countries are valid in Poland, so most EU

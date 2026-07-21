@@ -31,6 +31,9 @@ def retrieve(question: str, top_k: int | None = None) -> list[Source]:
                 document=str(meta.get("document", "unknown")),
                 snippet=text,
                 score=round(1.0 - float(dist), 4),
+                # Empty strings (no provenance recorded) become None.
+                source_name=str(meta.get("source_name") or "") or None,
+                source_url=str(meta.get("source_url") or "") or None,
             )
         )
     return sources

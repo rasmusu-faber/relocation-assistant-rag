@@ -1,3 +1,8 @@
+---
+source_name: gov.pl — Get a PESEL ID (a service for foreigners)
+source_url: https://www.gov.pl/web/gov/uzyskaj-numer-pesel--usluga-dla-cudzoziemcow-en
+---
+
 # PESEL number for EU citizens in Poland
 
 The PESEL is an 11-digit national identification number used in Poland for
