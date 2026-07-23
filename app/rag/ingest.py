@@ -96,7 +96,7 @@ def ingest(data_dir: str | None = None) -> dict[str, int | str]:
     # Upsert keeps re-ingestion idempotent.
     collection.upsert(ids=ids, documents=texts, embeddings=embed(texts), metadatas=metadatas)
 
-    summary = {
+    summary: dict[str, int | str] = {
         "documents": len(documents),
         "chunks": len(texts),
         "collection": settings.collection_name,

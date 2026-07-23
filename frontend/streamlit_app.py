@@ -172,7 +172,7 @@ with st.sidebar:
 st.session_state.setdefault("question", "")
 
 st.caption("Try one of these:")
-for col, example in zip(st.columns(len(EXAMPLE_QUESTIONS)), EXAMPLE_QUESTIONS):
+for col, example in zip(st.columns(len(EXAMPLE_QUESTIONS)), EXAMPLE_QUESTIONS, strict=True):
     # Clicking a chip fills the input; the rerun applies it before the widget
     # below is instantiated, which is why we set state and rerun here.
     if col.button(example, use_container_width=True):

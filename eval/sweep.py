@@ -17,7 +17,7 @@ Run:  python -m eval.sweep
 from __future__ import annotations
 
 import sys
-from functools import lru_cache
+from functools import cache
 from pathlib import Path
 from typing import Any
 
@@ -41,7 +41,7 @@ TOP_K = 4
 RESULTS_FILE = Path(__file__).parent / "sweep_results.md"
 
 
-@lru_cache(maxsize=None)
+@cache
 def _load_model(name: str) -> Any:
     """Load (and cache) a SentenceTransformer by name."""
     from sentence_transformers import SentenceTransformer
@@ -77,7 +77,9 @@ def _evaluate_config(model_name: str, chunk_size: int) -> dict[str, float]:
         client.delete_collection("sweep")
     except Exception:
         pass
-    collection = client.create_collection(
+    # Typed as Any at this boundary, mirroring app.rag.store.get_collection: the
+    # app passes list[list[float]] embeddings the same way, and Chroma accepts them.
+    collection: Any = client.create_collection(
         name="sweep", metadata={"hnsw:space": "cosine"}
     )
     collection.add(

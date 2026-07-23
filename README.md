@@ -1,5 +1,10 @@
 # Relocation Assistant — RAG with Source Citations & Evaluation
 
+[![CI](https://github.com/rasmusfaber-ai/relocation-assistant-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/rasmusfaber-ai/relocation-assistant-rag/actions/workflows/ci.yml)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
+[![Code style: ruff](https://img.shields.io/badge/lint-ruff%20%2B%20mypy-261230.svg)](https://docs.astral.sh/ruff/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
 A retrieval-augmented generation (RAG) assistant that answers questions about
 relocating to Poland as an EU citizen (PESEL, residence registration, health
 insurance, …), grounded in a small **curated knowledge base compiled from
@@ -55,7 +60,7 @@ flowchart LR
 - **Vector store:** Chroma (local, persistent)
 - **LLM:** pluggable provider — Ollama (local) or any OpenAI-compatible endpoint
 - **Frontend:** Streamlit
-- **Quality:** pytest + GitHub Actions CI; evaluation harness in `eval/`
+- **Quality:** `ruff` + `mypy` + `pytest`, all gated in GitHub Actions CI; evaluation harness in `eval/`
 - **Packaging:** Dockerfile + docker-compose
 
 ## Quickstart (local)

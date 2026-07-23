@@ -24,7 +24,7 @@ def retrieve(question: str, top_k: int | None = None) -> list[Source]:
     dists = result.get("distances", [[]])[0]
 
     sources: list[Source] = []
-    for text, meta, dist in zip(docs, metas, dists):
+    for text, meta, dist in zip(docs, metas, dists, strict=True):
         # Cosine distance -> similarity score in [0, 1] (higher is better).
         sources.append(
             Source(

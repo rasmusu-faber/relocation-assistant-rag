@@ -22,6 +22,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install ruff==0.15.22 mypy==2.3.0
+
+      - name: Lint (ruff)
+        run: ruff check .
+
+      - name: Type-check (mypy)
+        run: mypy app eval
 
       - name: Run tests
         run: pytest

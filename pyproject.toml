@@ -8,3 +8,18 @@ requires-python = ">=3.11"
 pythonpath = ["."]
 testpaths = ["tests"]
 addopts = "-q"
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, isort, pyupgrade, flake8-bugbear.
+select = ["E", "F", "I", "UP", "B"]
+
+[tool.mypy]
+python_version = "3.11"
+# Third-party libs (chromadb, sentence_transformers, streamlit) ship no type
+# stubs; don't fail on their missing imports — we type-check our own code.
+ignore_missing_imports = true
+warn_unused_ignores = true
