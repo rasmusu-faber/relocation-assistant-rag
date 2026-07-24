@@ -32,8 +32,10 @@ What makes this more than a "chat with your PDF" demo: it ships with a small
 **evaluation harness** that measures retrieval quality (hit-rate@k) and enforces
 it as a **CI quality gate**, runnable locally and in CI without an API key.
 (Built by someone whose M.Sc. thesis was LLM evaluation — so evaluation is
-treated as a first-class concern, not an afterthought.) Answer-faithfulness
-scoring is on the roadmap, not yet implemented.
+treated as a first-class concern, not an afterthought.) It measures **both**
+failure modes of a RAG: retrieval quality (hit-rate@k / hit-rate@1 / MRR) and
+**answer groundedness** — whether each answer sentence is backed by a retrieved
+passage.
 
 ## Architecture
 
@@ -163,6 +165,35 @@ So the top-1 ranking gap closes either by **upgrading the embedding model** or b
 The default stays MiniLM @ 800 (smallest, fastest, CI-friendly); the table
 documents what each knob buys. Re-generate it any time with `python -m eval.sweep`.
 
+### Answer groundedness (faithfulness)
+
+Retrieval metrics ask *"did we fetch the right document?"*. Groundedness asks the
+complementary question that matters most for a citation-based assistant: *"does the
+generated answer stay within what those passages say — or does the model add claims
+of its own?"* A hallucinated detail is most dangerous exactly when sources are
+attached, because the answer looks trustworthy.
+
+`eval/groundedness.py` gives a **lightweight, offline proxy**: it generates each
+answer, splits it into sentences, and marks a sentence as *supported* when its best
+cosine similarity to any retrieved passage clears a threshold. An answer's
+groundedness is the fraction of supported sentences.
+
+```bash
+python -m eval.groundedness --limit 5    # needs a configured LLM provider
+```
+
+Illustrative run (Groq `llama-3.1-8b-instant`): **mean groundedness ≈ 83%**, with
+about half the answers fully grounded — enough signal to catch the sentences a
+model adds beyond its sources.
+
+**Honest limitations:** this measures *semantic overlap*, not logical entailment —
+a sentence that contradicts a passage while reusing its words can still score as
+supported, and a correctly-grounded but tersely-worded sentence can dip below the
+threshold. It is a cheap, deterministic screen, not a substitute for an NLI /
+LLM-as-judge faithfulness model. Because it calls the LLM it runs locally, not as
+the API-key-free CI gate (and free-tier rate limits may skip some questions; the
+run reports how many).
+
 The evaluation set lives in `eval/eval_set.jsonl` (question / expected-source
 pairs). Extend it as you add documents.
 
@@ -211,7 +242,7 @@ relocation-assistant-rag/
 │       ├── generator.py   # LLM provider abstraction (Ollama / OpenAI-compatible)
 │       └── pipeline.py    # retrieve + generate → answer with sources
 ├── frontend/streamlit_app.py
-├── eval/{run_eval.py, sweep.py, eval_set.jsonl}
+├── eval/{run_eval.py, sweep.py, groundedness.py, eval_set.jsonl}
 ├── data/                  # curated summaries compiled from official sources (.md/.txt)
 ├── tests/                 # pytest
 ├── .github/workflows/ci.yml   # tests + retrieval eval gate
@@ -224,10 +255,11 @@ relocation-assistant-rag/
 - [x] MVP: ingest, cited answers, FastAPI + Streamlit, Docker
 - [x] Eval harness wired into CI (retrieval hit-rate gate ≥ 0.8)
 - [x] Retrieval metrics beyond the gate: hit-rate@1 + MRR, and a chunk-size × embedding-model sweep (`eval/sweep.py`)
+- [x] Answer-groundedness (faithfulness) proxy: per-sentence support against retrieved passages (`eval/groundedness.py`)
 - [ ] Public deployment (Streamlit Community Cloud) + README screenshots & live link
 - [x] Machine-readable provenance: citations link to the official source page
 - [ ] v2 corpus: dated snapshot of the real official pages, retrieval over primary text
-- [ ] Stretch: agentic clarify-question step, reranking, answer-faithfulness scoring
+- [ ] Stretch: agentic clarify-question step, reranking, NLI/LLM-as-judge faithfulness (beyond the embedding proxy)
 
 ## Disclaimer
 
