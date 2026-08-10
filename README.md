@@ -256,7 +256,7 @@ relocation-assistant-rag/
 - [x] Eval harness wired into CI (retrieval hit-rate gate ≥ 0.8)
 - [x] Retrieval metrics beyond the gate: hit-rate@1 + MRR, and a chunk-size × embedding-model sweep (`eval/sweep.py`)
 - [x] Answer-groundedness (faithfulness) proxy: per-sentence support against retrieved passages (`eval/groundedness.py`)
-- [ ] Public deployment (Streamlit Community Cloud) + README screenshots & live link
+- [x] Public deployment (Streamlit Community Cloud) + README screenshots & live link
 - [x] Machine-readable provenance: citations link to the official source page
 - [ ] v2 corpus: dated snapshot of the real official pages, retrieval over primary text
 - [ ] Stretch: agentic clarify-question step, reranking, NLI/LLM-as-judge faithfulness (beyond the embedding proxy)
