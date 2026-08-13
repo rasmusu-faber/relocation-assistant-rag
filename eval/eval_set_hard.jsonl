@@ -1,0 +1,18 @@
+{"question": "My employer just hired me on a umowa o pracę — who signs me up for health insurance and pays the contribution?", "expected_document": "health_insurance_employment.md"}
+{"question": "As a regular salaried employee, do I need to do anything myself to get NFZ coverage?", "expected_document": "health_insurance_employment.md"}
+{"question": "I run a one-person business (JDG) in Poland — how do I arrange and pay for my own health insurance?", "expected_document": "health_insurance_self_employed.md"}
+{"question": "How is my monthly NFZ health contribution worked out when I am self-employed?", "expected_document": "health_insurance_self_employed.md"}
+{"question": "I am not working and not covered as anyone's dependent — can I still get NFZ coverage, and how?", "expected_document": "health_insurance_voluntary.md"}
+{"question": "Is there a sign-up fee or back-payment when I take out voluntary NFZ insurance after a gap in cover?", "expected_document": "health_insurance_voluntary.md"}
+{"question": "My spouse does not work — how do I add them to my Polish health insurance?", "expected_document": "health_insurance_family_members.md"}
+{"question": "Which form registers my children for NFZ coverage through me?", "expected_document": "health_insurance_family_members.md"}
+{"question": "I have not started my Polish insurance yet — what covers a doctor visit in the meantime?", "expected_document": "health_insurance_ehic_temporary.md"}
+{"question": "Once I live and work in Poland permanently, is my EHIC still enough?", "expected_document": "health_insurance_ehic_temporary.md"}
+{"question": "Now that I am insured, how do I pick a primary-care GP?", "expected_document": "health_insurance_choosing_poz.md"}
+{"question": "Which declaration do I submit to choose my przychodnia or lekarz POZ?", "expected_document": "health_insurance_choosing_poz.md"}
+{"question": "Which office do I go to in order to register the address where I live?", "expected_document": "residence_zameldowanie.md"}
+{"question": "What document proving my right to the flat do I need for zameldowanie?", "expected_document": "residence_zameldowanie.md"}
+{"question": "As an EU citizen staying more than three months, where do I register my stay near Gdansk?", "expected_document": "residence_eu_stay.md"}
+{"question": "What proof of purpose of stay do I need to register residence if I am not working?", "expected_document": "residence_eu_stay.md"}
+{"question": "After how many years in Poland do I acquire the right of permanent residence?", "expected_document": "residence_permanent.md"}
+{"question": "Which document confirms my permanent residence right as an EU national after five years?", "expected_document": "residence_permanent.md"}

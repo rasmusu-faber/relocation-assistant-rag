@@ -1,9 +1,9 @@
 {"question": "How do I get a PESEL number in Poland?", "expected_document": "pesel.md"}
 {"question": "What documents do I need to apply for a PESEL?", "expected_document": "pesel.md"}
-{"question": "Which office handles residence registration for an address?", "expected_document": "residence_registration.md"}
-{"question": "Where do EU citizens register a stay longer than three months in the Gdansk region?", "expected_document": "residence_registration.md"}
-{"question": "How does public health insurance work if I am employed in Poland?", "expected_document": "health_insurance.md"}
-{"question": "What covers my medical care before my Polish insurance is active?", "expected_document": "health_insurance.md"}
+{"question": "Which office handles residence registration for an address?", "expected_document": "residence_zameldowanie.md"}
+{"question": "Where do EU citizens register a stay longer than three months in the Gdansk region?", "expected_document": "residence_eu_stay.md"}
+{"question": "How does public health insurance work if I am employed in Poland?", "expected_document": "health_insurance_employment.md"}
+{"question": "What covers my medical care before my Polish insurance is active?", "expected_document": "health_insurance_ehic_temporary.md"}
 {"question": "Do I need a NIP tax number if I am just an employee in Poland?", "expected_document": "nip_tax_number.md"}
 {"question": "How is income tax PIT withheld from my salary in Poland?", "expected_document": "nip_tax_number.md"}
 {"question": "Who registers me with ZUS for social security when I start a job?", "expected_document": "zus_social_security.md"}
