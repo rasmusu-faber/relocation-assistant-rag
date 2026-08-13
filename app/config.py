@@ -24,6 +24,12 @@ class Settings(BaseSettings):
     # Embeddings
     embedding_model: str = "sentence-transformers/all-MiniLM-L6-v2"
 
+    # Re-ranking (cross-encoder). When enabled, the pipeline retrieves a wider
+    # candidate pool and re-orders it with the cross-encoder down to top_k.
+    rerank_enabled: bool = False
+    rerank_candidates: int = 20
+    reranker_model: str = "cross-encoder/ms-marco-MiniLM-L-6-v2"
+
     # Retrieval / chunking
     top_k: int = 4
     chunk_size: int = 800
