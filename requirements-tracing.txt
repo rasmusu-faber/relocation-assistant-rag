@@ -1,0 +1,2 @@
+# Optional: Langfuse tracing (see README). Not needed for the core app, tests or eval.
+langfuse>=3

@@ -20,6 +20,7 @@ from typing import Any
 
 from app.config import get_settings
 from app.models import Source
+from app.observability import observe
 
 
 @lru_cache(maxsize=1)
@@ -30,6 +31,7 @@ def get_reranker() -> Any:
     return CrossEncoder(get_settings().reranker_model)
 
 
+@observe(name="rerank")
 def rerank(
     question: str, sources: list[Source], top_k: int | None = None
 ) -> list[Source]:

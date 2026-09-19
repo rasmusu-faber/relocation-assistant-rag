@@ -3,8 +3,10 @@ from __future__ import annotations
 
 from app.config import get_settings
 from app.models import Source
+from app.observability import observe
 
 
+@observe(name="retrieve", as_type="retriever")
 def retrieve(question: str, top_k: int | None = None) -> list[Source]:
     """Return the ``top_k`` most relevant passages for ``question``."""
     from app.rag.store import embed, get_collection

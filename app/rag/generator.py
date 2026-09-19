@@ -4,6 +4,7 @@ from __future__ import annotations
 import httpx
 
 from app.config import get_settings
+from app.observability import observe, record_generation
 
 SYSTEM_PROMPT = (
     "You are a helpful assistant answering questions about relocating to Poland. "
@@ -22,16 +23,28 @@ def build_prompt(question: str, context_blocks: list[str]) -> str:
     )
 
 
+@observe(name="generate", as_type="generation")
 def generate(question: str, context_blocks: list[str], timeout: float = 60.0) -> str:
     """Generate an answer with the configured LLM provider."""
     settings = get_settings()
     prompt = build_prompt(question, context_blocks)
 
     if settings.llm_provider == "ollama":
-        return _generate_ollama(prompt, settings, timeout)
-    if settings.llm_provider == "openai":
-        return _generate_openai(prompt, settings, timeout)
-    raise ValueError(f"Unknown LLM_PROVIDER: {settings.llm_provider!r}")
+        model, answer = settings.ollama_model, _generate_ollama(prompt, settings, timeout)
+    elif settings.llm_provider == "openai":
+        model, answer = settings.openai_model, _generate_openai(prompt, settings, timeout)
+    else:
+        raise ValueError(f"Unknown LLM_PROVIDER: {settings.llm_provider!r}")
+
+    record_generation(
+        model=model,
+        input=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ],
+        output=answer,
+    )
+    return answer
 
 
 def _generate_ollama(prompt: str, settings, timeout: float) -> str:

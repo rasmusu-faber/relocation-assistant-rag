@@ -1,6 +1,9 @@
 """FastAPI application exposing the RAG assistant."""
 from __future__ import annotations
 
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
+
 from fastapi import FastAPI, HTTPException
 
 from app import __version__
@@ -11,11 +14,20 @@ from app.models import (
     HealthResponse,
     IngestResponse,
 )
+from app.observability import flush as flush_traces
+
+
+@asynccontextmanager
+async def lifespan(_: FastAPI) -> AsyncIterator[None]:
+    yield
+    flush_traces()  # send buffered Langfuse traces (no-op when tracing is off)
+
 
 app = FastAPI(
     title="Relocation Assistant (RAG)",
     version=__version__,
     description="RAG assistant with source citations for relocating to Poland.",
+    lifespan=lifespan,
 )
 
 

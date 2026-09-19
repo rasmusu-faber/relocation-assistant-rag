@@ -105,6 +105,30 @@ docker compose up --build
 # API → http://localhost:8000 , UI → http://localhost:8501
 ```
 
+## Tracing with Langfuse (optional)
+
+Every `/chat` request can be traced in [Langfuse](https://langfuse.com): one trace per
+question, with the retrieved passages (`retrieve`), the re-ranked order (`rerank`,
+when enabled) and the LLM call (`generate`: model, full prompt, answer, latency).
+Tracing is **off by default** and costs nothing when off.
+
+![A Langfuse trace of one question: rag_answer with retrieve and generate spans, with latency per step](docs/langfuse-trace.png)
+
+```bash
+pip install -r requirements-tracing.txt
+# in .env — keys come from a (free) Langfuse Cloud project: Settings → API Keys
+LANGFUSE_PUBLIC_KEY=pk-lf-...
+LANGFUSE_SECRET_KEY=sk-lf-...
+LANGFUSE_HOST=https://cloud.langfuse.com   # or https://us.cloud.langfuse.com / self-hosted
+```
+
+With Docker, build the API image with tracing included:
+`INSTALL_TRACING=true docker compose up --build` (keys are read from `.env`).
+
+Ask a question, then open the project's **Tracing** page in the Langfuse UI. The
+eval harness (`python -m eval.*`) and the tests switch tracing off on purpose, so
+batch runs never flood the UI.
+
 ## Deployment
 
 The public demo runs free on **Streamlit Community Cloud**, deployed straight from
@@ -270,6 +294,7 @@ relocation-assistant-rag/
 │   ├── main.py            # FastAPI app & routes
 │   ├── config.py          # settings from environment
 │   ├── models.py          # request/response schemas
+│   ├── observability.py   # optional Langfuse tracing (no-op unless configured)
 │   └── rag/
 │       ├── ingest.py      # load → chunk → embed → store
 │       ├── retriever.py   # vector search
@@ -282,7 +307,7 @@ relocation-assistant-rag/
 ├── tests/                 # pytest
 ├── .github/workflows/ci.yml   # tests + retrieval eval gate
 ├── Dockerfile, docker-compose.yml
-├── requirements.txt, .env.example, .gitignore
+├── requirements.txt, requirements-tracing.txt (optional), .env.example, .gitignore
 ```
 
 ## Roadmap
@@ -294,6 +319,7 @@ relocation-assistant-rag/
 - [x] Public deployment (Streamlit Community Cloud) + README screenshots & live link
 - [x] Machine-readable provenance: citations link to the official source page
 - [x] Cross-encoder re-ranking, with a hard eval set that shows the hit@1 / MRR gain (`eval/rerank_eval.py`)
+- [x] Optional Langfuse tracing of retrieve / rerank / generate (off by default; excluded from eval)
 - [ ] v2 corpus: dated snapshot of the real official pages, retrieval over primary text
 - [ ] Stretch: agentic clarify-question step, NLI/LLM-as-judge faithfulness (beyond the embedding proxy)
 

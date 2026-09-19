@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from app.config import get_settings
 from app.models import ChatResponse, Source
+from app.observability import observe
 from app.rag.generator import generate
 from app.rag.retriever import retrieve
 
@@ -25,6 +26,7 @@ def _retrieve_sources(question: str, k: int) -> list[Source]:
     return rerank(question, pool, top_k=k)
 
 
+@observe(name="rag_answer")
 def answer_question(question: str, top_k: int | None = None) -> ChatResponse:
     """Run retrieval + generation and return an answer with its sources."""
     k = top_k or get_settings().top_k

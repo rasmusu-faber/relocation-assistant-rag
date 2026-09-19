@@ -6,8 +6,12 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 
 # Install dependencies first for better layer caching.
-COPY requirements.txt .
+COPY requirements.txt requirements-tracing.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
+
+# Optional Langfuse tracing: docker build --build-arg INSTALL_TRACING=true .
+ARG INSTALL_TRACING=false
+RUN if [ "$INSTALL_TRACING" = "true" ]; then pip install --no-cache-dir -r requirements-tracing.txt; fi
 
 COPY . .
 

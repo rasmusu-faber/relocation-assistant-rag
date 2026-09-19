@@ -35,6 +35,11 @@ class Settings(BaseSettings):
     chunk_size: int = 800
     chunk_overlap: int = 120
 
+    # Langfuse tracing (optional; active only when both keys are set)
+    langfuse_public_key: str = ""
+    langfuse_secret_key: str = ""
+    langfuse_host: str = "https://cloud.langfuse.com"
+
     # Storage
     chroma_dir: str = ".chroma"
     collection_name: str = "relocation"

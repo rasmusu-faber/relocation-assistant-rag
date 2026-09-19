@@ -1,6 +1,10 @@
 services:
   api:
-    build: .
+    build:
+      context: .
+      args:
+        # Set INSTALL_TRACING=true (shell or .env) to include Langfuse in the image.
+        INSTALL_TRACING: ${INSTALL_TRACING:-false}
     # The image default runs the single-process demo; here we run the FastAPI API.
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
     ports:
